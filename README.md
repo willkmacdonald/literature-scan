@@ -54,7 +54,7 @@ cd medtech-rag
 ```bash
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements-dev.txt
+pip install -r requirements.txt
 ```
 
 ### 3. Set up Azure resources
@@ -177,7 +177,7 @@ mypy src
    - Check .env file has correct credentials
 
 2. **Missing Dependencies**
-   - Install dev dependencies: `pip install -r requirements-dev.txt`
+   - Install dependencies: `pip install -r requirements.txt`
 
 3. **Test Failures**
    - For integration tests, ensure Azure resources exist
