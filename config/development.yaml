@@ -25,7 +25,7 @@ storage:
   max_file_size_mb: 50
   allowed_extensions:
     - ".pdf"
-    - ".docx"
+    - ".json"
     - ".txt"
     - ".md"
 
@@ -45,27 +45,48 @@ search:
 document_intelligence:
   api_version: "2023-07-31"
   model_id: "prebuilt-layout"
+  medical_focus: true
+  extract_tables: true
+  extract_figures: true
+  confidence_threshold: 0.85
   features:
     - "tables"
     - "keyValuePairs"
     - "entities"
+    - "figures"
 
 embeddings:
-  model_name: "sentence-transformers/all-MiniLM-L6-v2"
-  dimension: 384
-  batch_size: 32
-  max_length: 512
+  model_name: "pritamdeka/S-PubMedBert-MS-MARCO"
+  dimension: 768
+  batch_size: 16
+  max_length: 350
+  medical_optimized: true
+  pooling: "mean"
+  normalize: true
 
 chunking:
-  strategy: "sliding_window"
-  chunk_size: 1000
-  chunk_overlap: 200
+  strategy: "contextual_medical"
+  base_chunk_size: 300
+  chunk_overlap: 50
   min_chunk_size: 100
+  preserve_medical_sections: true
+  context_tokens: 75
   separators:
-    - "\n\n"
+    - "\n## "      # Medical section headers
+    - "\n### "     # Medical subsection headers
+    - "\n\n"       # Paragraph breaks
+    - "[TABLE_END]" # End of tables
+    - "[SECTION_END:" # End of sections
     - "\n"
     - ". "
     - " "
+
+contextual_retrieval:
+  enabled: true
+  context_model: "claude-3-haiku-20240307"
+  context_length: 75
+  hybrid_search: true
+  medical_context: true
 
 retrieval:
   top_k: 10
