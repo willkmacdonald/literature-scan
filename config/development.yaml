@@ -1,0 +1,83 @@
+# Development configuration for Medtech RAG solution
+
+app:
+  name: "Medtech RAG"
+  version: "0.1.0"
+  environment: "development"
+  debug: true
+
+api:
+  host: "0.0.0.0"
+  port: 8000
+  cors:
+    origins:
+      - "http://localhost:3000"
+      - "http://localhost:8000"
+    allow_credentials: true
+    allow_methods: ["GET", "POST", "PUT", "DELETE"]
+    allow_headers: ["*"]
+
+storage:
+  containers:
+    raw_documents: "raw-documents"
+    processed_documents: "processed-documents"
+    embeddings: "embeddings"
+  max_file_size_mb: 50
+  allowed_extensions:
+    - ".pdf"
+    - ".docx"
+    - ".txt"
+    - ".md"
+
+search:
+  index_name: "medtech-documents"
+  api_version: "2023-11-01"
+  scoring_profile: "default"
+  max_results: 50
+  highlight_fields:
+    - "content"
+    - "title"
+  facets:
+    - "authors"
+    - "publication_year"
+    - "document_type"
+
+document_intelligence:
+  api_version: "2023-07-31"
+  model_id: "prebuilt-layout"
+  features:
+    - "tables"
+    - "keyValuePairs"
+    - "entities"
+
+embeddings:
+  model_name: "sentence-transformers/all-MiniLM-L6-v2"
+  dimension: 384
+  batch_size: 32
+  max_length: 512
+
+chunking:
+  strategy: "sliding_window"
+  chunk_size: 1000
+  chunk_overlap: 200
+  min_chunk_size: 100
+  separators:
+    - "\n\n"
+    - "\n"
+    - ". "
+    - " "
+
+retrieval:
+  top_k: 10
+  rerank_top_k: 5
+  hybrid_alpha: 0.5  # 0 = keyword only, 1 = semantic only
+  min_relevance_score: 0.7
+
+logging:
+  level: "INFO"
+  format: "json"
+  file:
+    enabled: true
+    path: "logs/medtech-rag.log"
+    max_size_mb: 10
+    backup_count: 5
